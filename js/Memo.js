@@ -1,3 +1,4 @@
+/*extern $, $$ */
 var Memo = function () {
 	var images = [
 		"images/1.jpg",
@@ -27,9 +28,9 @@ var Memo = function () {
 			for (var i=(images.length - 1); i>=0; i--) {
 				images.push(images[i]);
 			}
-			for (var i=0, il=images.length, listItem; i<il; i++) {
+			for (var j=0, jl=images.length, listItem; j<jl; j++) {
 				listItem = cards.create("li", null, true);
-				listItem.create("span", null, true, (i + 1).toString());
+				listItem.create("span", null, true, (j + 1).toString());
 				listItem.create("img", null, true);
 				listItems.push(listItem);
 			}
@@ -46,7 +47,8 @@ var Memo = function () {
 			images.sort(function () {
 				return Math.round(Math.random()) - 0.5;
 			});
-			for (var i=0; image=cardImages[i]; i++) {
+			for (var i=0, il=cardImages.length, image; i<il; i++) {
+				image = cardImages[i];
 				listItems[i].addEvent("click", Memo.showImage);
 				image.src = images[i];
 				image.setStyle("visibility", "hidden");
