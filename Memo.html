@@ -1,0 +1,41 @@
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<title>Memory</title>
+	<link rel="stylesheet" href="css/memo.css" type="text/css">
+</head>
+<body>
+	
+	<div id="container">
+		<div id="header">
+			<h1>Play memory</h1>
+			<p>Welcome to the Memory game! Get two of each same picture. Click a card or press the corresponding number on your keypad.</p>
+		</div>
+	
+		<ul id="cards"></ul>
+		
+		<div id="you-made-it">
+			<h3>Bravo!</h3>
+			<p>You made it in <span id="total-time"></span>.</p>
+			<p>Want to play again?</p>
+			<p>
+				<input type="button" value="Play again!" class="start-over">
+			</p>
+		</div>
+		
+		<div id="footer">
+			<p>
+				Time: <span id="timer">0</span>
+			</p>
+			<p>
+				<span id="no-of-matches"></span> card matches left | <input type="button" value="Start over" class="start-over">
+			</p>
+		</div>
+	
+		<script type="text/javascript" src="AIRAliases.js"></script>
+		<script type="text/javascript" src="js/DOMAssistantComplete.js"></script>
+		<script type="text/javascript" src="js/Memo.js"></script>
+	</div>
+	
+</body>
+</html>
