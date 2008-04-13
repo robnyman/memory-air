@@ -25,8 +25,8 @@ var Memo = function () {
 			var gameNameStart = null;
 			for (var i=0, il=contents.length, game, gameName, cardColl, cardCollImages, item, itemPath; i<il; i++) {
 				game = contents[i];
-				if (game.isDirectory) {
-					gameName = game.name;
+				gameName = game.name;
+				if (game.isDirectory && !/\.svn/i.test(gameName)) {
 					gamesDropDown.create("option", {
 						value : gameName
 					}, true, game.name);
