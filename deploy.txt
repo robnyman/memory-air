@@ -1,1 +1,1 @@
-adt -package -storetype pkcs12 -keystore RobCert.pfx Memory.air application.xml Memo.html js/* css/* images/*
+adt -package -storetype pkcs12 -keystore RobCert.pfx Memory.air application.xml Memo.html AIRAliases.js js/* css/* images/*

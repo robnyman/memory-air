@@ -1,4 +1,4 @@
-/*extern $, $$ */
+/*extern air, $, $$ */
 var Memo = function () {
 	var fileSeparator = air.File.separator;
 	var cards = null;
@@ -32,9 +32,8 @@ var Memo = function () {
 					}, true, game.name);
 					cardColl = game.getDirectoryListing();
 					cardCollImages = [];
-					for (j=0, jl=cardColl.length; j<jl; j++) {
+					for (var j=0, jl=cardColl.length; j<jl; j++) {
 						item = cardColl[j];
-						//item = "images/games/" + gameName + "/" + cardColl[j].name;
 						if (/jpe?g$/i.test(item.extension)) {
 							itemPath = "images" + fileSeparator + "games" + fileSeparator +  gameName + fileSeparator + cardColl[j].name;
 							cardCollImages.push(itemPath, itemPath);
