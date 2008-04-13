@@ -1,17 +1,11 @@
 /*extern $, $$ */
 var Memo = function () {
-	var images = [
-		"images/1.jpg",
-		"images/2.jpg",
-		"images/3.jpg",
-		"images/4.jpg",
-		"images/5.jpg",
-		"images/6.jpg",
-		"images/7.jpg",
-		"images/8.jpg"
-	];
-	var listItems = [];
+	var fileSeparator = air.File.separator;
+	var cards = null;
+	var images = [];
 	var cardImages = [];
+	var cardGames = {};
+	var listItems = [];
 	var noOfMatches = null;
 	var matchesLeft = 0;
 	var currentImage = null;
@@ -24,10 +18,53 @@ var Memo = function () {
 		previousKey : null,
 		init : function () {
 			window.moveTo((screen.width / 2) - (window.innerWidth / 2), 50);
-			var cards = $("#cards");
-			for (var i=(images.length - 1); i>=0; i--) {
-				images.push(images[i]);
+			var files = air.File.applicationDirectory;
+			files = files.resolvePath("images" + fileSeparator + "games");
+			var contents = files.getDirectoryListing(); 
+			var gamesDropDown = $("#games");
+			var gameNameStart = null;
+			for (var i=0, il=contents.length, game, gameName, cardColl, cardCollImages, item, itemPath; i<il; i++) {
+				game = contents[i];
+				if (game.isDirectory) {
+					gameName = game.name;
+					gamesDropDown.create("option", {
+						value : gameName
+					}, true, game.name);
+					cardColl = game.getDirectoryListing();
+					cardCollImages = [];
+					for (j=0, jl=cardColl.length; j<jl; j++) {
+						item = cardColl[j];
+						//item = "images/games/" + gameName + "/" + cardColl[j].name;
+						if (/jpe?g$/i.test(item.extension)) {
+							itemPath = "images" + fileSeparator + "games" + fileSeparator +  gameName + fileSeparator + cardColl[j].name;
+							cardCollImages.push(itemPath, itemPath);
+						}
+					}
+					cardGames[gameName] = cardCollImages;
+					if (!gameNameStart) {
+						gameNameStart = gameName;
+					}
+				}
 			}
+			gamesDropDown.addEvent("change", function () {
+				Memo.setGame(this.options[this.selectedIndex].value);
+			});
+			noOfMatches = $$("no-of-matches");
+			this.setGame(gameNameStart);
+			$(document).addEvent("keyup", function (evt) {
+				Memo.checkKey(evt);
+			});
+			$(".start-over").addEvent("click", function (evt) {
+				Memo.setSrc(evt);
+			});
+		},
+		
+		setGame : function (gameName) {
+			images = cardGames[gameName];
+			listItems = [];
+			var cards = $("#cards");
+			cards.replaceContent(null);
+			
 			for (var j=0, jl=images.length, listItem; j<jl; j++) {
 				listItem = cards.create("li", null, true);
 				listItem.create("span", null, true, (j + 1).toString());
@@ -35,10 +72,7 @@ var Memo = function () {
 				listItems.push(listItem);
 			}
 			cardImages = cards.cssSelect("img");
-			noOfMatches = $$("no-of-matches");
 			this.setSrc();
-			$(document).addEvent("keyup", this.checkKey);
-			$(".start-over").addEvent("click", Memo.setSrc);
 		},
 		
 		setSrc : function () {
@@ -49,13 +83,13 @@ var Memo = function () {
 			});
 			for (var i=0, il=cardImages.length, image; i<il; i++) {
 				image = cardImages[i];
-				listItems[i].addEvent("click", Memo.showImage);
+				listItems[i].addEvent("click", this.showImage);
 				image.src = images[i];
 				image.setStyle("visibility", "hidden");
 			}
 			noOfMatches.replaceContent(matchesLeft.toString());
-			Memo.noOfSeconds = 0;
-			Memo.startTimer();
+			this.noOfSeconds = 0;
+			this.startTimer();
 		},
 		
 		showImage : function () {
@@ -81,9 +115,9 @@ var Memo = function () {
 				currentImage = img;
 			}
 			if (matchesLeft === 0) {
+				clearInterval(secondsTimer);
 				$("#you-made-it").setStyle("display", "block");
 				$("#total-time").replaceContent(Memo.timer.innerHTML);
-				clearInterval(secondsTimer);
 			}
 		},
 		
@@ -108,6 +142,9 @@ var Memo = function () {
 		checkKey : function (evt) {
 			clearTimeout(keyClearTimer);
 			var keyCode = evt.keyCode;
+			if (keyCode === 66) {
+				window.nativeWindow.minimize();
+			}
 			var keyNumber = null;
 			switch (keyCode) {
 				case 48:
@@ -143,10 +180,10 @@ var Memo = function () {
 			}
 			if (typeof keyNumber === "number") {
 				clearTimeout(keyTimer);
-				if (typeof Memo.previousKey === "number") {
-					keyNumber = parseInt(Memo.previousKey.toString() + keyNumber.toString(), 10);
+				if (typeof this.previousKey === "number") {
+					keyNumber = parseInt(this.previousKey.toString() + keyNumber.toString(), 10);
 				}
-				Memo.previousKey = keyNumber;
+				this.previousKey = keyNumber;
 				keyNumber--;
 				if (keyNumber < images.length) {
 					keyTimer = setTimeout(function (index) {
@@ -160,7 +197,7 @@ var Memo = function () {
 				}, 500);
 			}
 			else {
-				Memo.previousKey = null;
+				this.previousKey = null;
 			}
 		}
 	};

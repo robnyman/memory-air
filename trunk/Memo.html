@@ -11,17 +11,23 @@
 		<div id="header">
 			<h1>Play memory</h1>
 			<p>Welcome to the Memory game! Get two of each same picture. Click a card or press the corresponding number on your keypad.</p>
+			<p>
+				<label for="games">Choosen game:</label>
+				<select id="games"></select>
+			</p>
 		</div>
-	
+		
 		<ul id="cards"></ul>
 		
 		<div id="you-made-it">
-			<h3>Bravo!</h3>
-			<p>You made it in <span id="total-time"></span>.</p>
-			<p>Want to play again?</p>
-			<p>
-				<input type="button" value="Play again!" class="start-over" />
-			</p>
+			<div class="dialog">
+				<h2>Bravo!</h2>
+				<p>You made it in:</p>
+				<p id="total-time">10 minutes, 35 seconds</p>
+				<p id="start-over-container">
+					<input type="button" value="Play again!" class="start-over" />
+				</p>
+			</div>
 		</div>
 		
 		<div id="footer">
