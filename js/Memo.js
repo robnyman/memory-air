@@ -13,6 +13,7 @@ var Memo = function () {
 	var keyTimer = null;
 	var keyClearTimer = null;
 	return {
+		twoImagesVisible : false,
 		timer : null,
 		noOfSeconds : 0,
 		previousKey : null,
@@ -76,6 +77,7 @@ var Memo = function () {
 		
 		setSrc : function () {
 			$("#you-made-it").setStyle("display", "none");
+			$("#you-made-it-dialog").setStyle("display", "none");
 			matchesLeft = images.length / 2;
 			images.sort(function () {
 				return Math.round(Math.random()) - 0.5;
@@ -92,31 +94,36 @@ var Memo = function () {
 		},
 		
 		showImage : function () {
-			var img = $(this).cssSelect("img")[0];
-			img.setStyle("visibility", "visible");
-			if (currentImage && img !== currentImage) {
-				if (currentImage.src === img.src) {
-					currentImage.parentNode.removeEvent("click", Memo.showImage);
-					this.removeEvent("click", Memo.showImage);
-					noOfMatches.replaceContent(String(--matchesLeft));
+			if (!Memo.twoImagesVisible) {
+				var img = $(this).cssSelect("img")[0];
+				img.setStyle("visibility", "visible");
+				if (currentImage && img !== currentImage) {
+					if (currentImage.src === img.src) {
+						currentImage.parentNode.removeEvent("click", Memo.showImage);
+						this.removeEvent("click", Memo.showImage);
+						noOfMatches.replaceContent(String(--matchesLeft));
+					}
+					else {
+						Memo.twoImagesVisible = true;
+						setTimeout(function (currentImage, img) {
+							return function () {
+								Memo.twoImagesVisible = false;
+								currentImage.setStyle("visibility", "hidden");
+								img.setStyle("visibility", "hidden");
+							};
+						}(currentImage, img), 1000);
+					}
+					currentImage = null;
 				}
 				else {
-					setTimeout(function (currentImage, img) {
-						return function () {
-							currentImage.setStyle("visibility", "hidden");
-							img.setStyle("visibility", "hidden");
-						};
-					}(currentImage, img), 1000);
+					currentImage = img;
 				}
-				currentImage = null;
-			}
-			else {
-				currentImage = img;
-			}
-			if (matchesLeft === 0) {
-				clearInterval(secondsTimer);
-				$("#you-made-it").setStyle("display", "block");
-				$("#total-time").replaceContent(Memo.timer.innerHTML);
+				if (matchesLeft === 0) {
+					clearInterval(secondsTimer);
+					$("#you-made-it").setStyle("display", "block");
+					$("#you-made-it-dialog").setStyle("display", "block");
+					$("#total-time").replaceContent(Memo.timer.innerHTML);
+				}
 			}
 		},
 		
