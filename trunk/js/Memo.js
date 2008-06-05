@@ -57,6 +57,7 @@ var Memo = function () {
 			$(".start-over").addEvent("click", function (evt) {
 				Memo.setSrc(evt);
 			});
+			nativeWindow.visible = true;
 		},
 		
 		setGame : function (gameName) {
