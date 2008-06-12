@@ -58,6 +58,7 @@ var Memo = function () {
 				Memo.setSrc(evt);
 			});
 			nativeWindow.visible = true;
+			nativeWindow.activate();
 		},
 		
 		setGame : function (gameName) {
